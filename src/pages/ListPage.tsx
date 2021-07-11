@@ -1,15 +1,15 @@
 import {IMediaEntry} from '@undyingwraith/dag-media-archive';
-import {Pagination, Pane, Spinner} from 'evergreen-ui';
+import {ICollection} from '@undyingwraith/dag-media-archive/dist/types/ICollection';
+import {Pagination, Pane} from 'evergreen-ui';
 import React, {useEffect, useState} from 'react';
-import {MediaEntry} from '../components';
-import {ActionBoundary, IAlertProps} from '../components/ActionBoundary';
-import {BreadCrumbs, IBreadcrumb} from '../components/BreadCrumbs';
-import {useDmaStore} from '../hooks/useDmaStore';
+import {ActionBoundary, BreadCrumbs, IAlertProps, IBreadcrumb, MediaEntry} from '../components';
+import {useDmaStore} from '../hooks';
 
 export const ListPage = () => {
 	const perPage = 12;
 	const store = useDmaStore();
 	const [mediaList, setMediaList] = useState<IMediaEntry[]>([]);
+	const [collections, setCollections] = useState<ICollection[]>([]);
 	const [page, setPage] = useState(1);
 	const [alert, setAlert] = useState<IAlertProps | undefined>(undefined);
 

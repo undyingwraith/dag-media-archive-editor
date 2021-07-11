@@ -1,11 +1,9 @@
 import {IMediaEntry} from '@undyingwraith/dag-media-archive';
 import {Pane, Tab, Table, Tablist} from 'evergreen-ui';
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {BreadCrumbs, IBreadcrumb} from '../components/BreadCrumbs';
-import {useDmaStore} from '../hooks/useDmaStore';
-import {useTypeResolver} from '../hooks/useTypeResolver';
-import {ActionBoundary, IAlertProps} from '../components';
+import {useHistory, useParams, useLocation} from 'react-router-dom';
+import {ActionBoundary, BreadCrumbs, IAlertProps, IBreadcrumb} from '../components';
+import {useDmaStore, useTypeResolver} from '../hooks';
 
 const TABS = {
 	Preview: 'preview',
@@ -14,11 +12,17 @@ const TABS = {
 };
 
 export const DetailPage = () => {
-	let {id} = useParams<{ id: string }>();
+	const params = useParams<{ id: string, tab?: string }>();
+	const h = useHistory();
+	const location = useLocation();
+	if (!params.tab)
+		h.push(`${location.pathname}/${TABS.Preview}`);
+	const tab = params.tab ?? TABS.Preview;
+	const id = params.id;
+
 	const store = useDmaStore();
 	const resolver = useTypeResolver();
 	const [media, setMedia] = useState<IMediaEntry | undefined>(undefined);
-	const [selectedIndex, setSelectedIndex] = useState(TABS.Preview);
 	const [alert, setAlert] = useState<IAlertProps | undefined>(undefined);
 
 	useEffect(() => {
@@ -70,22 +74,22 @@ export const DetailPage = () => {
 				<Tablist marginBottom={16} flexBasis={240} marginRight={24}>
 					<Tab
 						id={TABS.Preview}
-						onSelect={() => setSelectedIndex(TABS.Preview)}
-						isSelected={TABS.Preview === selectedIndex}
+						onSelect={() => h.push(`${location.pathname.replace(tab, TABS.Preview)}`)}
+						isSelected={TABS.Preview === tab}
 					>
 						Preview
 					</Tab>
 					<Tab
 						id={TABS.Details}
-						onSelect={() => setSelectedIndex(TABS.Details)}
-						isSelected={TABS.Details === selectedIndex}
+						onSelect={() => h.push(`${location.pathname.replace(tab, TABS.Details)}`)}
+						isSelected={TABS.Details === tab}
 					>
 						Details
 					</Tab>
 					<Tab
 						id={TABS.Edit}
-						onSelect={() => setSelectedIndex(TABS.Edit)}
-						isSelected={TABS.Edit === selectedIndex}
+						onSelect={() => h.push(`${location.pathname.replace(tab, TABS.Edit)}`)}
+						isSelected={TABS.Edit === tab}
 					>
 						Edit
 					</Tab>
@@ -95,14 +99,14 @@ export const DetailPage = () => {
 				<Pane
 					id={`panel-${TABS.Preview}`}
 					role="tabpanel"
-					display={TABS.Preview === selectedIndex ? 'block' : 'none'}
+					display={TABS.Preview === tab ? 'block' : 'none'}
 				>
 					{media && resolver.resolve(media.uri).bigPreview(media)}
 				</Pane>
 				<Pane
 					id={`panel-${TABS.Details}`}
 					role="tabpanel"
-					display={TABS.Details === selectedIndex ? 'block' : 'none'}
+					display={TABS.Details === tab ? 'block' : 'none'}
 				>
 					<Table>
 						<Table.Head>
@@ -117,7 +121,7 @@ export const DetailPage = () => {
 				<Pane
 					id={`panel-${TABS.Edit}`}
 					role="tabpanel"
-					display={TABS.Edit === selectedIndex ? 'block' : 'none'}
+					display={TABS.Edit === tab ? 'block' : 'none'}
 				>
 					TODO
 				</Pane>

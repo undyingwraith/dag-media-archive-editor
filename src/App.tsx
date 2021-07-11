@@ -22,7 +22,7 @@ function App() {
 				flexDirection={'column'}
 			>
 				<Switch>
-					<Route path={'/detail/:id'} component={DetailPage}/>
+					<Route path={'/detail/:id/:tab?'} component={DetailPage}/>
 					<Route path={'/'} component={ListPage}/>
 				</Switch>
 			</Pane>
