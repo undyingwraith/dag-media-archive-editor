@@ -1,30 +1,20 @@
-import {IImageEntry, IMediaEntry, IVideoEntry} from '@undyingwraith/dag-media-archive';
+import {IMediaEntry} from '@undyingwraith/dag-media-archive';
+import {Pane, Text} from 'evergreen-ui';
 import React from 'react';
+import {useTypeResolver} from '../hooks/useTypeResolver';
 
 export const MediaEntry = (props: IMediaEntryProps) => {
-	const s = props.entry
+	const {entry} = props;
+	const resolver = useTypeResolver()
 
-	let preview: any
-
-	switch(s.uri) {
-		case 'Entry.Image':
-			const img = s as IImageEntry
-			preview = <img src={`https://ipfs.io/ipfs/${img.thumbnail.toString()}`}/>
-			break;
-		case 'Entry.Image.Video':
-			const vid = s as IVideoEntry
-			preview = <img src={`https://ipfs.io/ipfs/${vid.thumbnail.toString()}`}/>
-			break;
-		default:
-			preview = s.uri
-			break;
-	}
-
-	return <div>
-		<p>{preview}</p>
-		<a href={`https://ipfs.io/ipfs/${s.source.toString()}`}>{s.id}</a>
-	</div>
-}
+	return <Pane
+		elevation={1}>
+		<a href={`#/detail/${entry.id}`}>
+			{resolver && resolver.resolve(entry.uri).listPreview(entry)}
+			<Text>{entry.id}</Text>
+		</a>
+	</Pane>;
+};
 
 export interface IMediaEntryProps {
 	entry: IMediaEntry
