@@ -8,8 +8,13 @@ export const MediaEntry = (props: IMediaEntryProps) => {
 	const resolver = useTypeResolver()
 
 	return <Pane
-		elevation={1}>
-		<a href={`#/detail/${entry.id}`}>
+		elevation={1}
+		background={'blue100'}
+		width={350}
+		height={400}
+		margin={24}
+	>
+		<a href={`#/detail/${entry.id}`} style={{width: '100%', height: '100%'}}>
 			{resolver && resolver.resolve(entry.uri).listPreview(entry)}
 			<Text>{entry.id}</Text>
 		</a>

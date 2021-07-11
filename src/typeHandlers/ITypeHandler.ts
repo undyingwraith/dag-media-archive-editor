@@ -1,15 +1,17 @@
 import {IMediaEntry} from '@undyingwraith/dag-media-archive';
 
-export interface ITypeHandler {
+export interface ITypeHandler<T extends IMediaEntry> {
 	/**
 	 *
 	 * @param entry
 	 */
-	bigPreview(entry: IMediaEntry): JSX.Element
+	bigPreview(entry: T): JSX.Element
 
 	/**
 	 *
 	 * @param entry
 	 */
-	listPreview(entry: IMediaEntry): JSX.Element
+	listPreview(entry: T): JSX.Element
+
+	getMeta(entry: T): { [key: string]: any }
 }

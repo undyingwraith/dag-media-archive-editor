@@ -1,17 +1,18 @@
+import {IMediaEntry} from '@undyingwraith/dag-media-archive';
 import {ITypeHandler} from './typeHandlers';
 
 export class TypeResolver {
-	private readonly handlers: { [key: string]: ITypeHandler };
+	private readonly handlers: { [key: string]: ITypeHandler<IMediaEntry> };
 
-	constructor(private defaultHandler: ITypeHandler) {
+	constructor(private defaultHandler: ITypeHandler<IMediaEntry>) {
 		this.handlers = {};
 	}
 
-	registerHandler(uri: string, handler: ITypeHandler) {
+	registerHandler(uri: string, handler: ITypeHandler<IMediaEntry>) {
 		this.handlers[uri] = handler;
 	}
 
-	resolve(uri: string): ITypeHandler {
+	resolve(uri: string): ITypeHandler<IMediaEntry> {
 		if (this.handlers.hasOwnProperty(uri)) {
 			return this.handlers[uri];
 		} else {
